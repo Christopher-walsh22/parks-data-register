@@ -591,6 +591,196 @@
 					]
 				}
 			]
+		},
+		{
+			"name": "Fees",
+			"item": [
+				{
+					"name": "Get Fee by ORCS",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{vanity_url}}/fees/?orcs=4",
+							"host": [
+								"{{vanity_url}}"
+							],
+							"path": [
+								"fees"
+							],
+							"query": [
+								{
+									"key": "orcs",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Fee by ORCS and Facility",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{vanity_url}}/fees?orcs=4&facilityName=Kokanee Glacier Cabin",
+							"host": [
+								"{{vanity_url}}"
+							],
+							"path": [
+								"fees"
+							],
+							"query": [
+								{
+									"key": "orcs",
+									"value": "4"
+								},
+								{
+									"key": "facilityName",
+									"value": "Kokanee Glacier Cabin"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Fee by ORCS, Facility, and Activity",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{vanity_url}}/fees?orcs=4&facilityName=Kokanee Glacier Cabin&activity=June 1 - November 30 Cabin Rental",
+							"host": [
+								"{{vanity_url}}"
+							],
+							"path": [
+								"fees"
+							],
+							"query": [
+								{
+									"key": "orcs",
+									"value": "4"
+								},
+								{
+									"key": "facilityName",
+									"value": "Kokanee Glacier Cabin"
+								},
+								{
+									"key": "activity",
+									"value": "June 1 - November 30 Cabin Rental"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Fee by with Billing Per",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{vanity_url}}/fees?orcs=4&facilityName=Kokanee Glacier Cabin&activity=June 1 - November 30 Cabin Rental&billingPer=Family",
+							"host": [
+								"{{vanity_url}}"
+							],
+							"path": [
+								"fees"
+							],
+							"query": [
+								{
+									"key": "orcs",
+									"value": "4"
+								},
+								{
+									"key": "facilityName",
+									"value": "Kokanee Glacier Cabin"
+								},
+								{
+									"key": "activity",
+									"value": "June 1 - November 30 Cabin Rental"
+								},
+								{
+									"key": "billingPer",
+									"value": "Family"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put Specific Fee",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Night\": \"100\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{vanity_url}}/fees/:identifier?night=100",
+							"host": [
+								"{{vanity_url}}"
+							],
+							"path": [
+								"fees",
+								":identifier"
+							],
+							"query": [
+								{
+									"key": "night",
+									"value": "100"
+								}
+							],
+							"variable": [
+								{
+									"key": "identifier",
+									"value": "4::FEES::Kokanee Glacier Cabin::June 1 - November 30 Cabin Rental::Person"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {

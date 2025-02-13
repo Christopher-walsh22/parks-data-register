@@ -1,6 +1,6 @@
 const readXlsxFile = require('read-excel-file/node');
 const fs = require('fs');
-//const filePath = "./feereg.csv"
+// const filePath = "./feereg.csv"
 const {
     PutItemCommand,
     DynamoDBClient
@@ -19,50 +19,50 @@ const options = {
 
 
   if (IS_OFFLINE === 'True') {
-    options.endpoint = 'http://172.17.0.2:8000';
+    options.endpoint = 'http://localhost:8000';
   }
   const dynamoClient = new DynamoDBClient(options);
 let errorList = [];
 let errorCount = 0;
 const schema = {
-  'PK': {
-    prop: 'PK',
+  'pk': {
+    prop: 'pk',
     type: String
   },
-  'SK': {
-    prop: 'SK',
+  'sk': {
+    prop: 'sk',
     type: String
   },
-  'Night': {
-    prop: 'Night',
+  'night': {
+    prop: 'night',
     type: String
   },
-  'Day': {
-    prop: 'Day',
+  'day': {
+    prop: 'day',
     type: String
   },
-  'Use': {
-    prop: 'Use',
+  'use': {
+    prop: 'use',
     type: String
   },
-  'Week': {
-    prop: 'Week',
+  'week': {
+    prop: 'week',
     type: String
   },
-  'Year': {
-    prop: 'Year',
+  'year': {
+    prop: 'year',
     type: String
   },
-  'Trip': {
-    prop: 'Trip',
+  'trip': {
+    prop: 'trip',
     type: String
   },
-  'Direction of Trip': {
-    prop: 'Direction of Trip',
+  'directionOfTrip': {
+    prop: 'directionOfTrip',
     type: String
   },
-  '28 Days': {
-    prop: '28 Days',
+  'days28': {
+    prop: 'days28',
     type: String
   }
 }
@@ -83,12 +83,12 @@ async function doMigration(filePath) {
 
       // 1. Add the fee record
       let feeRecord ={
-          pk: row['PK'],
-          sk: row['SK']
+          pk: row['pk'],
+          sk: row['sk']
       }
 
       const availableFields = Object.keys(row);
-      const validFeeFields = ['Night', 'Day', 'Use', 'Week', 'Year', 'Trip', 'Direction of Trip', '28 Days'];
+      const validFeeFields = ['night', 'day', 'use', 'week', 'year', 'trip', 'directionOfTrip', 'days28'];
 
       validFeeFields.forEach((field) => {
           if (availableFields.includes(field) && row[field] !== undefined) {
@@ -99,7 +99,7 @@ async function doMigration(filePath) {
       console.log("Processed Fee Record:", feeRecord);
 
       if (!(await putItem(feeRecord))) {
-          console.log("There was an issue loading the fee for:", row[PK] + row[SK]);
+          console.log("There was an issue loading the fee for:", row[pk] + row[sk]);
       }
     }
     return rows.length;
@@ -126,7 +126,7 @@ async function putItem(record) {
   } catch (err) {
     console.log("There was an issue on line 128 loading fee: ", record.pk + record.sk)
     console.log("Error: ", err)
-    errorList.push(`PK: ${record.pk} , SK:${record.sk} error: ${err}`)
+    errorList.push(`pk: ${record.pk} , sk:${record.sk} error: ${err}`)
     errorCount++
     return false;
   }

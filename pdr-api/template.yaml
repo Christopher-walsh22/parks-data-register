@@ -493,6 +493,37 @@ Resources:
               Authorizer: NONE
               OverrideApiAuth: true
 
+  ### FeePut
+  FeePut:
+    FunctionName: FeePut
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: handlers/fees/PUT
+      Handler: index.handler
+      Layers:
+        - !Ref BaseLayer
+        - !Ref AWSUtilsLayer
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      MemorySize: 128
+      Timeout: 100
+      Description: Park FEES PUT lambda function
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref TableNameRegister
+          LOG_LEVEL: info
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TableNameRegister
+      Events:
+        ParkFeePut:
+          Type: Api
+          Properties:
+            Path: /fees/{identifier}
+            Method: PUT
+            RestApiId: !Ref ApiDeployment
+
   ### API ###
   ApiDeployment:
     Type: AWS::Serverless::Api

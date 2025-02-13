@@ -10,58 +10,58 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    const queryParams = event.queryStringParameters;
+    const queryParams = event.queryStringParameters
     const queryType = getQueryType(queryParams);
 
     let query;
     if(queryParams){
       switch (queryType) {
         case 'withBilling':
-          if (!queryParams.billingPer || !queryParams.activity || !queryParams.facilityName || !queryParams.orc) {
+          if (!queryParams.billingPer || !queryParams.activity || !queryParams.facilityName || !queryParams.orcs) {
             throw {
               code: 400,
               error: 'Insufficient parameters.',
               msg: `Missing required parameters for 'withBilling' query`
             };
           }
-          query = queryFeeWithBilling(queryParams.billingPer, queryParams.activity, queryParams.facilityName, queryParams.orc);
+          query = queryFeeWithBilling(queryParams.billingPer, queryParams.activity, queryParams.facilityName, queryParams.orcs);
           break;
         case 'byActivity':
-          if (!queryParams.activity || !queryParams.facilityName || !queryParams.orc) {
+          if (!queryParams.activity || !queryParams.facilityName || !queryParams.orcs) {
             throw {
               code: 400,
               error: 'Insufficient parameters.',
               msg: `Missing required parameters for 'byActivity' query`
             };
           }
-          query = queryFeeByActivity(queryParams.activity, queryParams.facilityName, queryParams.orc);
+          query = queryFeeByActivity(queryParams.activity, queryParams.facilityName, queryParams.orcs);
           break;
         case 'byFacilityName':
-          if (!queryParams.facilityName || !queryParams.orc) {
+          if (!queryParams.facilityName || !queryParams.orcs) {
             throw {
               code: 400,
               error: 'Insufficient parameters.',
               msg: `Missing required parameters for 'byFacilityName' query`
             };
           }
-          query = queryFeeByFacilityName(queryParams.facilityName, queryParams.orc);
+          query = queryFeeByFacilityName(queryParams.facilityName, queryParams.orcs);
           break;
-        case 'byOrc':
-          if (!queryParams.orc) {
+        case 'byOrcs':
+          if (!queryParams.orcs) {
             throw {
               code: 400,
               error: 'Insufficient parameters.',
-              msg: `Missing required query parameter: 'orc'`
+              msg: `Missing required query parameter: 'orcs'`
             };
           }
-          query = queryFeeByOrc(queryParams.orc);
+          query = queryFeeByOrcs(queryParams.orcs);
           console.log("query:", query);
           break;
         default:
           throw {
             code: 400,
             error: 'Insufficient parameters.',
-            msg: `Missing required query parameter: 'orc'`
+            msg: `Missing required query parameter: 'orcs'`
           };
       }
 
@@ -88,53 +88,53 @@ function getQueryType(queryParams) {
     return 'byActivity';
   } else if (queryParams?.facilityName) {
     return 'byFacilityName';
-  } else if (queryParams?.orc) {
-    return 'byOrc';
+  } else if (queryParams?.orcs) {
+    return 'byOrcs';
   } else {
     return 'insufficientParams';
   }
 }
-  function queryFeeByOrc(orc) {
+  function queryFeeByOrcs(orcs) {
     let query = {
       TableName: TABLE_NAME,
       KeyConditionExpression: 'pk = :pk',
       ExpressionAttributeValues: {
-        ':pk': {S: `${orc}::FEES`}
+        ':pk': {S: `${orcs}::FEES`}
       }
     };  
     return query;
   }
 
-  function queryFeeByFacilityName(facilityName, orc) {
+  function queryFeeByFacilityName(facilityName, orcs) {
     let query = {
       TableName: TABLE_NAME,
       KeyConditionExpression: 'pk = :pk AND begins_with(sk, :sk)',
       ExpressionAttributeValues: {
-        ':pk': { S: `${orc}::FEES` },
+        ':pk': { S: `${orcs}::FEES` },
         ':sk': { S: facilityName }
       }
     };
     return query;
   }
 
-function queryFeeByActivity(activity, facilityName, orc) {
+function queryFeeByActivity(activity, facilityName, orcs) {
   let query = {
     TableName: TABLE_NAME,
     KeyConditionExpression: 'pk = :pk AND begins_with(sk, :sk)',
     ExpressionAttributeValues: {
-      ':pk': { S: `${orc}::FEES` },
+      ':pk': { S: `${orcs}::FEES` },
       ':sk': { S: `${facilityName}::${activity}` }
     }
   };
   return query;
 }
 
-function queryFeeWithBilling(billing, activity, facilityName, orc) {
+function queryFeeWithBilling(billing, activity, facilityName, orcs) {
   let query = {
     TableName: TABLE_NAME,
     KeyConditionExpression: 'pk = :pk AND begins_with(sk, :sk)',
     ExpressionAttributeValues: {
-      ':pk': { S: `${orc}::FEES` },
+      ':pk': { S: `${orcs}::FEES` },
       ':sk': { S: `${facilityName}::${activity}::${billing}` }
     }
   };
