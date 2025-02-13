@@ -19,7 +19,7 @@ const options = {
 
 
   if (IS_OFFLINE === 'True') {
-    options.endpoint = 'http://http://172.17.0.2:8000';
+    options.endpoint = 'http://172.17.0.2:8000';
   }
   const dynamoClient = new DynamoDBClient(options);
 let errorList = [];
