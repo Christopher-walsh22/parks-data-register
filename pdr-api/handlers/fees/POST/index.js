@@ -31,8 +31,8 @@ exports.handler = async function (event, context) {
       // Construct the item to be put into DynamoDB
       const item = {
         pk: `${queryParams.ORCS}::FEES`,
-        sk: `${queryParams.parkFeature}::${queryParams.service}::${queryParams.chargeBy}`,
-        [queryParams.billBy]: queryParams.feeValue
+        sk: `${queryParams.parkFeature}::${queryParams.service}::${queryParams.billBy}`,
+        [queryParams.chargeBy]: queryParams.feeValue
       };
       logger.debug('Constructed Item:', item);
 

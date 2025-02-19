@@ -17,7 +17,7 @@ exports.handler = async function (event, context) {
       const queryParams = event.queryStringParameters;
       logger.debug('Query Parameters:', queryParams);
   
-      const requiredParams = ['ORCS', 'parkFeature', 'service', 'chargeBy'];
+      const requiredParams = ['ORCS', 'parkFeature', 'service', 'billingBy'];
       for (const param of requiredParams) {
         if (!queryParams?.[param]) {
           logger.error(`Bad Request - Missing Param: ${param}`);
@@ -32,7 +32,7 @@ exports.handler = async function (event, context) {
         // Construct the item to be deleted from DynamoDB
         const item = {
           pk: `${queryParams.ORCS}::FEES`,
-          sk: `${queryParams.parkFeature}::${queryParams.service}::${queryParams.chargeBy}`
+          sk: `${queryParams.parkFeature}::${queryParams.service}::${queryParams.billingBy}`
         };
         logger.debug('Constructed Item:', item);
   

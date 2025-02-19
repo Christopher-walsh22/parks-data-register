@@ -17,34 +17,34 @@ exports.handler = async (event, context) => {
     if(queryParams){
       switch (queryType) {
         case 'withBilling':
-          if (!queryParams.billingPer || !queryParams.activity || !queryParams.facilityName || !queryParams.ORCS) {
+          if (!queryParams.billingBy || !queryParams.activity || !queryParams.parkFeature || !queryParams.ORCS) {
             throw {
               code: 400,
               error: 'Insufficient parameters.',
               msg: `Missing required parameters for 'withBilling' query`
             };
           }
-          query = queryFeeWithBilling(queryParams.billingPer, queryParams.activity, queryParams.facilityName, queryParams.ORCS);
+          query = queryFeeWithBilling(queryParams.billingBy, queryParams.activity, queryParams.parkFeature, queryParams.ORCS);
           break;
         case 'byActivity':
-          if (!queryParams.activity || !queryParams.facilityName || !queryParams.ORCS) {
+          if (!queryParams.activity || !queryParams.parkFeature || !queryParams.ORCS) {
             throw {
               code: 400,
               error: 'Insufficient parameters.',
               msg: `Missing required parameters for 'byActivity' query`
             };
           }
-          query = queryFeeByActivity(queryParams.activity, queryParams.facilityName, queryParams.ORCS);
+          query = queryFeeByActivity(queryParams.activity, queryParams.parkFeature, queryParams.ORCS);
           break;
-        case 'byFacilityName':
-          if (!queryParams.facilityName || !queryParams.ORCS) {
+        case 'byparkFeature':
+          if (!queryParams.parkFeature || !queryParams.ORCS) {
             throw {
               code: 400,
               error: 'Insufficient parameters.',
-              msg: `Missing required parameters for 'byFacilityName' query`
+              msg: `Missing required parameters for 'byparkFeature' query`
             };
           }
-          query = queryFeeByFacilityName(queryParams.facilityName, queryParams.ORCS);
+          query = queryFeeByParkFeature(queryParams.parkFeature, queryParams.ORCS);
           break;
         case 'byORCS':
           if (!queryParams.ORCS) {
@@ -82,12 +82,12 @@ exports.handler = async (event, context) => {
 };
 
 function getQueryType(queryParams) {
-  if (queryParams?.billingPer) {
+  if (queryParams?.billingBy) {
     return 'withBilling';
   } else if (queryParams?.activity) {
     return 'byActivity';
-  } else if (queryParams?.facilityName) {
-    return 'byFacilityName';
+  } else if (queryParams?.parkFeature) {
+    return 'byparkFeature';
   } else if (queryParams?.ORCS) {
     return 'byORCS';
   } else {
@@ -105,37 +105,37 @@ function getQueryType(queryParams) {
     return query;
   }
 
-  function queryFeeByFacilityName(facilityName, ORCS) {
+  function queryFeeByParkFeature(parkFeature, ORCS) {
     let query = {
       TableName: TABLE_NAME,
       KeyConditionExpression: 'pk = :pk AND begins_with(sk, :sk)',
       ExpressionAttributeValues: {
         ':pk': { S: `${ORCS}::FEES` },
-        ':sk': { S: facilityName }
+        ':sk': { S: parkFeature }
       }
     };
     return query;
   }
 
-function queryFeeByActivity(activity, facilityName, ORCS) {
+function queryFeeByActivity(activity, parkFeature, ORCS) {
   let query = {
     TableName: TABLE_NAME,
     KeyConditionExpression: 'pk = :pk AND begins_with(sk, :sk)',
     ExpressionAttributeValues: {
       ':pk': { S: `${ORCS}::FEES` },
-      ':sk': { S: `${facilityName}::${activity}` }
+      ':sk': { S: `${parkFeature}::${activity}` }
     }
   };
   return query;
 }
 
-function queryFeeWithBilling(billing, activity, facilityName, ORCS) {
+function queryFeeWithBilling(billing, activity, parkFeature, ORCS) {
   let query = {
     TableName: TABLE_NAME,
     KeyConditionExpression: 'pk = :pk AND begins_with(sk, :sk)',
     ExpressionAttributeValues: {
       ':pk': { S: `${ORCS}::FEES` },
-      ':sk': { S: `${facilityName}::${activity}::${billing}` }
+      ':sk': { S: `${parkFeature}::${activity}::${billing}` }
     }
   };
   return query
